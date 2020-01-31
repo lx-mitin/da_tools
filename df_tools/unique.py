@@ -1,13 +1,16 @@
 """Extend DataFrame functionality."""
 
 
-def unique(df):
+def unique(df, number=5, columns=[]):
     """Return quantity and samples of unique values for each column."""
-    uniques = dict(df.nunique())
+    if columns:
+        uniques = dict(df[columns].nunique())
+    else:
+        uniques = dict(df.nunique())
 
     for k in uniques.keys():
-        vc = df[k].value_counts(normalize=True, dropna=False).head()
-        vc = vc.map(lambda v: round(v, 4))
-        uniques[k] = {'unique_counts': uniques[k], 'value_counts': dict(vc)}
+        val_c = df[k].value_counts(normalize=True, dropna=False).head(number)
+        val_c = val_c.map(lambda v: round(v, 4))
+        uniques[k] = {'unique_counts': uniques[k], 'value_counts': dict(val_c)}
 
     return uniques
